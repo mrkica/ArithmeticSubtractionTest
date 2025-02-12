@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arithmetic Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+        .error {
+            background-color: red;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="instructions">
+            <p>Your task is to repeatedly subtract 13 starting from 1079. Make sure to turn the SOUND ON to hear the metronome noise. It is important to make it as fast as possible while minimizing errors. When you start you have 5 minutes to make your best result.</p>
+            <button id="startButton">Start</button>
+        </div>
+        <div id="test" class="hidden">
+            <p id="task"></p>
+            <input type="number" id="answerInput" placeholder="Enter your answer">
+            <p id="timer"></p>
+        </div>
+        <div id="result" class="hidden">
+            <p class="result"></p>
+        </div>
+    </div>
+
+    <script>
+        let currentNumber = 1079;
+        let errors = 0;
+        let timerInterval;
+        let metronome;
+
+        document.getElementById('startButton').addEventListener('click', startTest);
+
+        function startTest() {
+            document.getElementById('instructions').classList.add('hidden');
+            document.getElementById('test').classList.remove('hidden');
+            document.getElementById('task').textContent = `${currentNumber} - 13 = ?`;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerInput').focus();
+
+            const endTime = Date.now() + 5 * 60 * 1000; // 5 minutes from now
+            timerInterval = setInterval(() => {
+                const timeLeft = endTime - Date.now();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endTest();
+                } else {
+                    document.getElementById('timer').textContent = `Time left: ${Math.ceil(timeLeft / 1000)} seconds`;
+                }
+            }, 1000);
+
+            playMetronome();
+
+            document.getElementById('answerInput').addEventListener('keydown', checkAnswer);
+        }
+
+        function checkAnswer(event) {
+            if (event.key === 'Enter') {
+                const answer = parseInt(document.getElementById('answerInput').value);
+                if (answer === currentNumber - 13) {
+                    currentNumber -= 13;
+                    document.getElementById('task').textContent = `${currentNumber} - 13 = ?`;
+                    document.getElementById('answerInput').value = '';
+                } else {
+                    errors++;
+                    document.body.classList.add('error');
+                    setTimeout(() => {
+                        document.body.classList.remove('error');
+                    }, 500);
+                    document.getElementById('answerInput').value = '';
+                }
+            }
+        }
+
+        function endTest() {
+            clearInterval(metronome);
+            document.getElementById('test').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+            document.querySelector('.result').textContent = `Last number: ${currentNumber}. Errors made: ${errors}. Your result is below average for your age.`;
+        }
+
+        function playMetronome() {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            oscillator.type = 'square';
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // 440 Hz tone
+            oscillator.connect(audioContext.destination);
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.1); // Short beep
+
+            metronome = setInterval(() => {
+                const oscillator = audioContext.createOscillator();
+                oscillator.type = 'square';
+                oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+                oscillator.connect(audioContext.destination);
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+            }, 500); // 2 Hz = every 500ms
+        }
+    </script>
+</body>
+</html>

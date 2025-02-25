@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arithmetic Test</title>
+    <title>Aritmetički Test</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,7 +34,7 @@
 <body>
     <div class="container">
         <div id="instructions">
-            <p>Your task is to repeatedly subtract 13 starting from 1079. Make sure to turn the SOUND ON to hear the metronome noise. It is important to make it as fast as possible while minimizing errors. When you start you have 5 minutes to make your best result.</p>
+            <p> Vaš je zadatak kontinuirano oduzimati broj 13 počevši od broja 1079 što brže i sa što manje grešaka. Kada započnete imate 5 minuta za ostvariti svoj rezultat. Uobičajeno, ljudi u 5 minuta stignu do broja 500. Važno je da imate UPALJEN ZVUK kako bi čuli zvuk metronoma.</p>
             <button id="startButton">Start</button>
         </div>
         <div id="test" class="hidden">
@@ -69,7 +69,7 @@
                     clearInterval(timerInterval);
                     endTest();
                 } else {
-                    document.getElementById('timer').textContent = `Time left: ${Math.ceil(timeLeft / 1000)} seconds`;
+                    document.getElementById('timer').textContent = `Uobičajeni rezultat: 500. Preostalo vrijeme: ${Math.ceil(timeLeft / 1000)} sekundi`;
                 }
             }, 1000);
 
@@ -100,7 +100,7 @@
             clearInterval(metronome);
             document.getElementById('test').classList.add('hidden');
             document.getElementById('result').classList.remove('hidden');
-            document.querySelector('.result').textContent = `Last number: ${currentNumber}. Errors made: ${errors}. Your result is below average for your age.`;
+            document.querySelector('.result').textContent = `Zadnji rezultat: ${currentNumber}. Broj pogrešaka: ${errors}. Vaš rezultat je ispod prosjeka.`;
         }
 
         function playMetronome() {
